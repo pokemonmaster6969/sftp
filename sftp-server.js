@@ -193,6 +193,28 @@ const sessionOps = new Map();
 const sessionsByIp = new Map();
 const sessionTimeout = 120000; // 2 minutes
 
+// Helper: Concurrency limiter
+const pLimit = (concurrency) => {
+    const queue = [];
+    let active = 0;
+
+    const next = () => {
+        if (queue.length && active < concurrency) {
+            const { fn, resolve, reject } = queue.shift();
+            active++;
+            Promise.resolve(fn()).then(resolve).catch(reject).finally(() => {
+                active--;
+                next();
+            });
+        }
+    };
+
+    return (fn) => new Promise((resolve, reject) => {
+        queue.push({ fn, resolve, reject });
+        next();
+    });
+};
+
 // Helper: Promise timeout
 const withTimeout = (promise, ms, errMsg) => {
     const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error(errMsg || `Operation timed out after ${ms}ms`)), ms));
@@ -599,8 +621,27 @@ app.get('/api/sftp/list-recursive', async (req, res) => {
 
     try {
         const fileList = [];
+
+        // For SFTP, allow parallel requests (up to 10)
+        // For FTP, strictly sequential (via runSessionOp)
+        const limit = session.type === 'sftp' ? pLimit(10) : null;
+
         const listFiles = async (currentPath) => {
-            const items = await runSessionOp(sessionId, s => s.client.list(currentPath), LIST_RECURSIVE_TIMEOUT_MS);
+            let items;
+
+            if (session.type === 'sftp') {
+                // SFTP: Run in parallel, bypass session queue but maintain activity/timeout
+                items = await limit(async () => {
+                    if (!sessions.has(sessionId)) throw new Error('Session expired');
+                    session.lastActivity = Date.now();
+                    return withTimeout(session.client.list(currentPath), LIST_RECURSIVE_TIMEOUT_MS, 'List timed out');
+                });
+            } else {
+                // FTP: Run sequentially via session queue
+                items = await runSessionOp(sessionId, s => s.client.list(currentPath), LIST_RECURSIVE_TIMEOUT_MS);
+            }
+
+            const promises = [];
 
             for (const item of items) {
                 const itemPath = path.posix.join(currentPath, item.name);
@@ -609,7 +650,11 @@ app.get('/api/sftp/list-recursive', async (req, res) => {
                     : (item && item.type === 2);
 
                 if (isDirectory) {
-                    await listFiles(itemPath);
+                    if (session.type === 'sftp') {
+                        promises.push(listFiles(itemPath));
+                    } else {
+                        await listFiles(itemPath);
+                    }
                 } else {
                     fileList.push({
                         name: item.name,
@@ -618,6 +663,10 @@ app.get('/api/sftp/list-recursive', async (req, res) => {
                         path: itemPath,
                     });
                 }
+            }
+
+            if (session.type === 'sftp') {
+                await Promise.all(promises);
             }
         };
 
