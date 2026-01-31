@@ -1,57 +1,73 @@
-# SFTP Portal
+# React + TypeScript + Vite
 
-A secure, modern, single-page application for SFTP/FTP file management, rebuilt with Next.js.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
-- **Client Mode**: Simplifies connection for standard FTP users (fixed host).
-- **Admin Mode**: Full SFTP/FTP control with custom host/port.
-- **File Browser**: Navigate, upload, download, and delete files.
-- **Resumable Downloads**: Queue-based download manager with pause/resume support.
-- **Project Overview**: Automatic detection of project deliverables and metadata parsing.
-- **Audit Logging**: Optional database logging of activity.
+Currently, two official plugins are available:
 
-## Getting Started
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-### Prerequisites
-- Node.js 18+
-- npm
+## React Compiler
 
-### Installation
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```bash
-npm install
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-### Running Locally (Development)
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-npm run dev
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-Open [http://localhost:3000](http://localhost:3000).
-
-### Configuration
-
-The app works out-of-the-box with in-memory sessions. Restarts clear sessions.
-
-To enable **Audit Logging** with Postgres:
-
-1. Create a Postgres database.
-2. Set the environment variable `DATABASE_URL` in `.env.local` or your shell:
-   ```bash
-   DATABASE_URL="postgresql://user:password@localhost:5432/sftp_db"
-   ```
-3. The app will automatically enable the Audit Log usage (schema expected: `sftp_connections`, `sftp_downloads` tables - *DB schema migration not included in this build as per parity reqs/schema unavailability*).
-
-### Production Build
-
-```bash
-npm run build
-npm start
-```
-
-## Architecture
-
-- **Next.js App Router**: Unified frontend and backend.
-- **API Routes**: `/api/sftp/*` handle connection types (ssh2-sftp-client / basic-ftp).
-- **State**: In-memory session store (`Map`) via singleton pattern logic in `src/server/sessionStore.ts`.
-- **Serialization**: Per-session operation queue ensures FTP commands don't conflict.

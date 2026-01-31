@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Report of Whole Transcriptome Analysis - NGS-240602</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 40px;
+            border-bottom: 4px solid #ffa500;
+        }
+
+        .header-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .header-tagline {
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header-contact {
+            font-size: 12px;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+
+        .report-title {
+            text-align: center;
+            padding: 40px 40px 20px 40px;
+            background-color: #f9f9f9;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .report-title h1 {
+            font-size: 28px;
+            color: #1e3c72;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .report-meta {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        .report-meta-item {
+            text-align: center;
+        }
+
+        .report-meta-label {
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .report-meta-value {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .client-info {
+            padding: 30px 40px;
+            background-color: #f0f4f8;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .client-section h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .client-section p {
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        nav {
+            background-color: #2a5298;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav h2 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+        }
+
+        .toc a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: block;
+        }
+
+        .toc a:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateX(5px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 80px;
+        }
+
+        h2 {
+            color: #1e3c72;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffa500;
+        }
+
+        h3 {
+            color: #2a5298;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #3a6298;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f0f4f8;
+        }
+
+        .table-caption {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        figure {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #ffa500;
+            border-radius: 4px;
+        }
+
+        figcaption {
+            font-style: italic;
+            color: #555;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .figure-placeholder {
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border: 2px dashed #999;
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .note strong {
+            color: #856404;
+        }
+
+        .deliverables-tree {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .deliverables-tree ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .deliverables-tree li {
+            margin: 5px 0;
+        }
+
+        footer {
+            background-color: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 30px 40px;
+            margin-top: 50px;
+        }
+
+        .footer-confidential {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .footer-meta {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .workflow-list {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+
+        .workflow-list li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        @media print {
+            nav {
+                position: relative;
+            }
+            
+            body {
+                background-color: white;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .client-info {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .toc {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 12px;
+                display: block;
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-logo">UNIGENOME</div>
+            <div class="header-tagline">Leading Genomic Innovations<br>A Division of USLL</div>
+            <div class="header-contact">
+                <strong>Lab Facility:</strong> 2A, 3A, 3B PASL-House, Beside Sahjanand college, Opposite Kamdenu Complex,<br>
+                Panjarapole, Ambawadi, Ahmedabad-380015, Gujarat<br>
+                <strong>Phone:</strong> +91-79-49006800 | <strong>WhatsApp:</strong> 6356005900<br>
+                <strong>Email:</strong> <a href="mailto:info@unigenome.in" style="color: white;">info@unigenome.in</a> | 
+                <strong>Website:</strong> <a href="http://www.unigenome.in" style="color: white;">www.unigenome.in</a>
+            </div>
+        </header>
+
+        <div class="report-title">
+            <h1>Final Report of<br>Whole Transcriptome Analysis<br>On Illumina Novaseq X Plus Platform</h1>
+            <div class="report-meta">
+                <div class="report-meta-item">
+                    <div class="report-meta-label">Report ID</div>
+                    <div class="report-meta-value">NGS-240602</div>
+                </div>
+                <div class="report-meta-item">
+                    <div class="report-meta-label">Date</div>
+                    <div class="report-meta-value">25-10-25</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="client-info">
+            <div class="client-section">
+                <h3>Submitted To</h3>
+                <p>
+                    Dr. Pallab Bhattacharya,<br>
+                    NIPER-A,<br>
+                    India
+                </p>
+            </div>
+            <div class="client-section">
+                <h3>Submitted By</h3>
+                <p>
+                    <strong>Unigenome</strong><br>
+                    A life sciences division of Unipath Specialty Laboratory Ltd.<br>
+                    3rd Floor, PASL House | Beside Sahjanand College<br>
+                    Panjara pol, Ambawadi, Ahmedabad – 380015 | Gujarat, India<br>
+                    Tel: +91-79-66197701<br>
+                    <a href="mailto:genomics@unipath.in">genomics@unipath.in</a> | 
+                    <a href="http://www.unigenome.in">www.unigenome.in</a>
+                </p>
+            </div>
+        </div>
+
+        <nav>
+            <h2>Table of Contents</h2>
+            <div class="toc">
+                <a href="#section-1">1. Bioinformatics Analysis</a>
+                <a href="#section-1-1">1.1 Bioinformatics Workflow</a>
+                <a href="#section-1-2">1.2 Software Details</a>
+                <a href="#section-1-3">1.3 Data Statistics</a>
+                <a href="#section-1-4">1.4 Reference Genome</a>
+                <a href="#section-1-5">1.5 Mapping to Reference</a>
+                <a href="#section-1-6">1.6 Transcript Assembly</a>
+                <a href="#section-1-7">1.7 Comparison with Reference</a>
+                <a href="#section-1-7-1">1.7.1 Novel Isoforms</a>
+                <a href="#section-1-8">1.8 Differential Expression</a>
+                <a href="#section-1-8-1">1.8.1 MA Plot</a>
+                <a href="#section-1-8-2">1.8.2 Volcano Plot</a>
+                <a href="#section-1-8-3">1.8.3 Heatmap</a>
+                <a href="#section-1-8-4">1.8.4 Gene Ontology (GO)</a>
+                <a href="#section-1-8-5">1.8.5 Pathway Analysis</a>
+                <a href="#section-1-8-6">1.8.6 Enrichment Analysis</a>
+                <a href="#section-2">2. Deliverables</a>
+            </div>
+        </nav>
+
+        <div class="content">
+            <section id="section-1">
+                <h2>1. Bioinformatics Analysis</h2>
+                <p>The next generation sequencing for these samples were performed on the Illumina platform. Statistics of raw data is shown in Table below:</p>
+
+                <div id="section-1-1">
+                    <h3>1.1 Bioinformatics Workflow</h3>
+                    <figure>
+                        <div class="figure-placeholder">
+                            [Figure 1: Bioinformatics Analysis Workflow]
+                        </div>
+                        <figcaption><strong>Figure 1:</strong> Bioinformatics Analysis Workflow</figcaption>
+                    </figure>
+                </div>
+
+                <div id="section-1-2">
+                    <h3>1.2 Detail of Software used for analysis</h3>
+                    <p>This section would contain the detailed information about software and tools used in the analysis (refer to original PDF for specific software versions and parameters).</p>
+                </div>
+
+                <div id="section-1-3">
+                    <h3>1.3 Data statistics</h3>
+                    <div class="table-caption">Table 1: Data statistics</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sample</th>
+                                <th>Reads in R1</th>
+                                <th>Reads in R2</th>
+                                <th>Total Reads (R1+R2)</th>
+                                <th>Total Bases (R1+R2)</th>
+                                <th>Total Data (GB)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1A</td>
+                                <td>32,483,578</td>
+                                <td>32,483,578</td>
+                                <td>64,967,156</td>
+                                <td>10,329,777,804</td>
+                                <td>10.33</td>
+                            </tr>
+                            <tr>
+                                <td>1B</td>
+                                <td>28,500,807</td>
+                                <td>28,500,807</td>
+                                <td>57,001,614</td>
+                                <td>9,063,256,626</td>
+                                <td>9.06</td>
+                            </tr>
+                            <tr>
+                                <td>1C</td>
+                                <td>30,545,110</td>
+                                <td>30,545,110</td>
+                                <td>61,090,220</td>
+                                <td>9,713,344,980</td>
+                                <td>9.71</td>
+                            </tr>
+                            <tr>
+                                <td>1D</td>
+                                <td>30,584,717</td>
+                                <td>30,584,717</td>
+                                <td>61,169,434</td>
+                                <td>9,725,940,006</td>
+                                <td>9.73</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="section-1-4">
+                    <h3>1.4 Reference genome information</h3>
+                    <p>The reference genome of Rat (GCF_036323735.1) and its corresponding GFF file was downloaded from NCBI (<a href="https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/036/323/735/GCF_036323735.1_GRCr8/">https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/036/323/735/GCF_036323735.1_GRCr8/</a>) database. The reference GFF file contains genome annotation. It includes information (locus and description) regarding genes and proteins. There are a total of 38,558 genes and 85,576 mRNAs as per the GFF file of NCBI reference genome. The fasta sequence of the reference genome along with the corresponding GFF file is provided with the deliverables in the folder named "02_reference_genome_and_gff" for client's reference.</p>
+
+                    <div class="table-caption">Table 2: Reference genome stats</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Stats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Chromosomes/Scaffolds</td>
+                                <td>76</td>
+                            </tr>
+                            <tr>
+                                <td>Total genome length (bp)</td>
+                                <td>2,849,581,192</td>
+                            </tr>
+                            <tr>
+                                <td>Mean chromosome/scaffold size</td>
+                                <td>37,494,489</td>
+                            </tr>
+                            <tr>
+                                <td>Max chromosome/scaffold size (bp)</td>
+                                <td>270,518,180</td>
+                            </tr>
+                            <tr>
+                                <td>Min chromosome/scaffolds size (bp)</td>
+                                <td>65,976</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-caption">Table 3: Detail Information of GFF file</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Genome elements</th>
+                                <th># Sequences</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>gene</td>
+                                <td>38,558</td>
+                            </tr>
+                            <tr>
+                                <td>mRNA</td>
+                                <td>85,576</td>
+                            </tr>
+                            <tr>
+                                <td>CDS</td>
+                                <td>1,087,627</td>
+                            </tr>
+                            <tr>
+                                <td>exon</td>
+                                <td>1,323,138</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="section-1-5">
+                    <h3>1.5 Mapping to reference genome</h3>
+                    <p>Indexing of the reference genome was carried out using STAR genomeGenerate mode option. Then the input reads, in FASTQ format, along with the indexed reference genome generated in previous step was given to the STAR aligner. The analysis begins by mapping HQ reads against the reference genome to identify the positions from where the reads originated. This mapping information allows us to collect subsets of the reads corresponding to each gene, and then to assemble and quantify transcripts represented by those reads. Hence, the high-quality reads were mapped to reference genome using STAR aligner to create alignment in BAM format for each sample with default parameters. The mapping statistics are provided in the table below:</p>
+
+                    <div class="table-caption">Table 4: Mapping Statistics</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sample Name</th>
+                                <th>Total clean Reads</th>
+                                <th>No. of Mapped Reads</th>
+                                <th>% of mapped read</th>
+                                <th># uniquely mapped read</th>
+                                <th>% uniquely mapped reads</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>NGS_240602_A1</td>
+                                <td>32,427,727</td>
+                                <td>28,686,105</td>
+                                <td>88.46</td>
+                                <td>28,044,755</td>
+                                <td>86.48</td>
+                            </tr>
+                            <tr>
+                                <td>NGS_240602_B1</td>
+                                <td>28,455,763</td>
+                                <td>24,883,082</td>
+                                <td>87.44</td>
+                                <td>24,328,064</td>
+                                <td>85.49</td>
+                            </tr>
+                            <tr>
+                                <td>NGS_240602_C1</td>
+                                <td>30,493,503</td>
+                                <td>27,205,835</td>
+                                <td>89.22</td>
+                                <td>26,637,003</td>
+                                <td>87.35</td>
+                            </tr>
+                            <tr>
+                                <td>NGS_240602_D1</td>
+                                <td>30,530,704</td>
+                                <td>26,170,371</td>
+                                <td>85.72</td>
+                                <td>25,554,445</td>
+                                <td>83.7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="section-1-6">
+                    <h3>1.6 Transcript assembly</h3>
+                    <p>StringTie assembles transcripts from RNA-seq reads that have been aligned to the genome, first grouping the reads into distinct gene loci and then assembling each locus into as many isoforms as are needed to explain the data. Following this, StringTie simultaneously assembles and quantify the final transcripts by using network flow algorithm and starting from most highly abundant transcripts. The reference genome GFF annotation files, containing exon structures of "known" genes, are then used to annotate the assembled transcripts and quantify the expression of known genes as well derive clues if a novel transcript has been found in the sample.</p>
+                    
+                    <p>After assembling each sample, the full set of assemblies is passed to StringTie's merge function, which merges together all the gene structures found in any of the samples. This step is required because transcripts in some of the samples might only be partially covered by reads, and as a consequence only partial versions of them will be assembled in the initial StringTie run. The merge step creates a set of transcripts that is consistent across all samples, so that the transcripts can be compared in subsequent steps in figure below:</p>
+
+                    <figure>
+                        <div class="figure-placeholder">
+                            [Figure 2: StringTie Merge Process Diagram]
+                        </div>
+                        <figcaption><strong>Figure 2:</strong> Explanation of merging transcript assemblies using StringTie's merge function. In this example, four partial assemblies from four different samples are merged into two transcripts A and B. Samples 1 and 2 are both consistent with the reference annotation, which is used here to merge and extend them to create transcript A. Samples 3 and 4 are consistent with each other but not with the annotation, and these are merged to create transcript B. Please note that the 4 samples shown here are for example purpose only (Ref: Micheal P et al., 2016).</figcaption>
+                    </figure>
+
+                    <div class="table-caption">Table 5: Transcript assembly statistics</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sample Name</th>
+                                <th># assembled transcripts</th>
+                                <th>Total assembled (bp)</th>
+                                <th>Mean transcript size (bp)</th>
+                                <th>Max transcript size (bp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>merged.fasta</td>
+                                <td>131,558</td>
+                                <td>558,712,322</td>
+                                <td>4,246</td>
+                                <td>236,003</td>
+                            </tr>
+                            <tr>
+                                <td>240602_A1</td>
+                                <td>68,625</td>
+                                <td>307,598,124</td>
+                                <td>4,482.30</td>
+                                <td>236,003</td>
+                            </tr>
+                            <tr>
+                                <td>240602_B1</td>
+                                <td>67,244</td>
+                                <td>304,098,219</td>
+                                <td>4,522.30</td>
+                                <td>236,003</td>
+                            </tr>
+                            <tr>
+                                <td>240602_C1</td>
+                                <td>69,094</td>
+                                <td>314,963,389</td>
+                                <td>4,558.50</td>
+                                <td>236,003</td>
+                            </tr>
+                            <tr>
+                                <td>240602_D1</td>
+                                <td>67,382</td>
+                                <td>302,349,837</td>
+                                <td>4,487.10</td>
+                                <td>236,003</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="note">
+                        <strong>Note:</strong> "MSTRG" in output files generated from stringtie stands for "Merged StringTie Transcripts," followed by a unique number. This identifier is created by StringTie merged step to label transcript isoforms that were not previously annotated in the reference genome used.
+                    </div>
+                </div>
+
+                <div id="section-1-7">
+                    <h3>1.7 Comparison of assembled transcripts with reference transcripts</h3>
+                    <p>For comparison of assembled transcripts with reference transcripts, Gffcompare utility was run taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a "class code" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Meaning of each class code is depicted in figure below:</p>
+
+                    <figure>
+                        <div class="figure-placeholder">
+                            [Figure 3: Class Codes and Their Descriptions]
+                        </div>
+                        <figcaption><strong>Figure 3:</strong> Different class codes and their descriptions (<a href="https://ccb.jhu.edu/software/stringtie/gffcompare.shtml">https://ccb.jhu.edu/software/stringtie/gffcompare.shtml</a>)</figcaption>
+                    </figure>
+
+                    <div id="section-1-7-1">
+                        <h4>1.7.1 Identification of novel isoform transcripts</h4>
+                        <p>To identify novel isoform transcripts not present in the reference GTF file, gffcompare utility was ran taking the reference GTF and the string-tie merged GTF file. This produces an output file, which adds to each transcript a "class code" and the name of the transcript from the reference annotation file to check how the predicted transcripts relate to an annotation file. Class code "j" means that predicted transcript is a potential novel isoform that shares at least one splice junction with a reference transcript. A total of 4,359 novel isoforms with the class code "j" were extracted and are provided with the deliverables in a file named novel.isoforms.gtf in the folder "03_transcript_assembly_gff". A brief description of the column names in the GTF file is provided in the same folder in the file named ReadMe.txt.</p>
+                    </div>
+                </div>
+
+                <div id="section-1-8">
+                    <h3>1.8 Differential expression analysis</h3>
+                    <p>Abundances of the transcripts in all samples were estimated using StringTie with the help of merged transcripts generated from merge stringtie step. A python program (prepDE.py) was used to extract the read count information directly from the files generated by StringTie. For differential expression analysis, sample comparison was made according to grouping information provided by client:</p>
+
+                    <div class="table-caption">Table 6: Sample description</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                                <th>Sample Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Controll</td>
+                                <td>A1</td>
+                            </tr>
+                            <tr>
+                                <td>Control2</td>
+                                <td>B1</td>
+                            </tr>
+                            <tr>
+                                <td>Test1</td>
+                                <td>C1</td>
+                            </tr>
+                            <tr>
+                                <td>Test2</td>
+                                <td>D1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-caption">Comparison information</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Comparison</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Test1 v/s Controll</td>
+                                <td>Comparison 1 [Test1 (C1) Vs Controll (A1)]</td>
+                            </tr>
+                            <tr>
+                                <td>Test2 v/s Controll</td>
+                                <td>Comparison 2 [Test2 (D1) Vs Controll (A1)]</td>
+                            </tr>
+                            <tr>
+                                <td>Control2 v/s Controll</td>
+                                <td>Comparison 3 [Control2 (B1) Vs Controll (A1)]</td>
+                            </tr>
+                            <tr>
+                                <td>Test1 v/s Control2</td>
+                                <td>Comparison 4 [Test1 (C1) Vs Control2 (B1)]</td>
+                            </tr>
+                            <tr>
+                                <td>Test2 v/s Control2</td>
+                                <td>Comparison 5 [Test2 (D1) Vs Control2 (B1)]</td>
+                            </tr>
+                            <tr>
+                                <td>Test2 v/s Test1</td>
+                                <td>Comparison 6 [Test2 (D1) Vs Test1 (C1)]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-caption">Table 7: Column description of edgeR output</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Column Name</th>
+                                <th>Feature identifier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>log2FoldChange</td>
+                                <td>log2FoldChange: the logarithm (base 2) of the fold change (Test/Control)</td>
+                            </tr>
+                            <tr>
+                                <td>logCPM</td>
+                                <td>Log10 of CPM value</td>
+                            </tr>
+                            <tr>
+                                <td>pval</td>
+                                <td>pvalue for the statistical significance of this change</td>
+                            </tr>
+                            <tr>
+                                <td>FDR</td>
+                                <td>FDR adjusted pvalue (q-value)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-caption">Table 8: Criteria used to identify upregulated and downregulated genes and assigning the significance</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>log2FC > 0</td>
+                                <td>Up regulated</td>
+                            </tr>
+                            <tr>
+                                <td>log2FC < 0</td>
+                                <td>Down regulated</td>
+                            </tr>
+                            <tr>
+                                <td>log2FC > 0 and q-value <0.05</td>
+                                <td>Significantly up regulated</td>
+                            </tr>
+                            <tr>
+                                <td>log2FC < 0 and q-value <0.05</td>
+                                <td>Significantly down regulated</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-caption">Table 9: Differential gene expression statistics</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>DGE Combination</th>
+                                <th>Total DEGS</th>
+                                <th>Down Regulated</th>
+                                <th>Up Regulated</th>
+                                <th>Significant Downregulated</th>
+                                <th>Significant Upregulated</th>
+                                <th># Significant DGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Comparison1</td>
+                                <td>30,810</td>
+                                <td>15,374</td>
+                                <td>15,436</td>
+                                <td>1,252</td>
+                                <td>1,295</td>
+                                <td>2,547</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison2</td>
+                                <td>31,100</td>
+                                <td>15,438</td>
+                                <td>15,662</td>
+                                <td>738</td>
+                                <td>773</td>
+                                <td>1,511</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison3</td>
+                                <td>30,635</td>
+                                <td>15,402</td>
+                                <td>15,233</td>
+                                <td>1,115</td>
+                                <td>1,157</td>
+                                <td>2,272</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison4</td>
+                                <td>31,629</td>
+                                <td>15,783</td>
+                                <td>15,846</td>
+                                <td>729</td>
+                                <td>738</td>
+                                <td>1,467</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison5</td>
+                                <td>30,549</td>
+                                <td>15,168</td>
+                                <td>15,381</td>
+                                <td>1,002</td>
+                                <td>1,151</td>
+                                <td>2,153</td>
+                            </tr>
+                            <tr>
+                                <td>Comparison6</td>
+                                <td>30,711</td>
+                                <td>15,271</td>
+                                <td>15,440</td>
+                                <td>1,163</td>
+                                <td>1,240</td>
+                                <td>2,403</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="note">
+                        <strong>Note:</strong> We recommend a minimum of triplicates per group in RNA-Seq experiments to obtain statistically significant results in differential expression analysis. However, as there are no replicates in this study, we performed DEG analysis using edgeR, which is capable of producing reasonable results in single-sample comparisons.
+                    </div>
+
+                    <div id="section-1-8-1">
+                        <h4>1.8.1 MA Plot for differentially expressed genes</h4>
+                        <p>The plot visualizes the differences between measurements taken in two samples, by transforming the data onto M (log ratio) and A (mean average) scales, then plotting these values. For illustration purpose, MA plot for Comparison1 has been depicted below:</p>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 4: MA Plot for Comparison-1]
+                            </div>
+                            <figcaption><strong>Figure 4:</strong> MA plot showing differentially expressed transcripts in Comparison-1. On X-axis normalized counts for all the samples and on Y-axis log2foldchange are plotted. Points colored are with red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.</figcaption>
+                        </figure>
+
+                        <div class="note">
+                            <strong>Note:</strong> MA plot for only one comparison has been shown above, however plots for all other combinations have been provided as a part of data deliverables "05_differential_expression_analysis".
+                        </div>
+                    </div>
+
+                    <div id="section-1-8-2">
+                        <h4>1.8.2 Volcano plot for differentially expressed genes</h4>
+                        <p>The "volcano plot" arranges expressed genes along dimensions of biological as well as statistical significance. For illustration purpose, Volcano plot for Comparison1 has been depicted below:</p>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 5: Volcano Plot for Comparison-1]
+                            </div>
+                            <figcaption><strong>Figure 5:</strong> Volcano plot showing differentially expressed transcripts in Comparison-1. X-axis represents the log2fold change values and Y-axis represents log10 of q-value (FDR corrected p-value). Points are colored red if the q-value is less than 0.05 and black if the q-value is greater than 0.05.</figcaption>
+                        </figure>
+
+                        <div class="note">
+                            <strong>Note:</strong> Volcano plot for only one comparison has been shown above, however plots for all other combinations has been provided as a part of data deliverables "05_differential_expression_analysis".
+                        </div>
+                    </div>
+
+                    <div id="section-1-8-3">
+                        <h4>1.8.3 Heatmap for significantly differential expressed genes</h4>
+                        <p>List of transcripts were selected for heatmap generation based on following criteria:</p>
+                        <ul class="workflow-list">
+                            <li>25 transcripts (downregulated) and 25 transcripts (upregulated) having lowest FDR/adjusted pvalue</li>
+                            <li>Transcripts must have proper annotations.</li>
+                        </ul>
+                        <p>pheatmap package from R software was used for producing heatmap. The colour coding ranges from red to blue where shades of red represent high transcripts expression and shades of blue represents low transcript expression.</p>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 6: Heatmap for Comparison-1]
+                            </div>
+                            <figcaption><strong>Figure 6:</strong> Heatmap representing most significant genes expressed in the samples was plotted using log10 of normalized read count values (CPM) for Comparison-1, where shades of blue represent downregulated genes and shades of red represents highly expressed genes.</figcaption>
+                        </figure>
+
+                        <div class="note">
+                            <strong>Note:</strong> Heatmap plot for only one comparison has been shown above, however plots for all other combinations have been provided as a part of data deliverables "05_differential_expression_analysis".
+                        </div>
+                    </div>
+
+                    <div id="section-1-8-4">
+                        <h4>1.8.4 Gene Ontology (GO) analysis for significant DEG</h4>
+                        <p>The Gene Ontology project provides controlled vocabularies of defined terms representing gene product properties. These cover three domains: Cellular Component, the parts of a cell or its extracellular environment; Molecular Function, the elemental activities of a gene product at the molecular level, such as binding or catalysis; and Biological Process, operations or sets of molecular events with a defined beginning and end, pertinent to the functioning of integrated living units: cells, tissues, organs, and organisms. GO was assigned to significant differentially expressed transcripts using Blast2go cli. Single gene can be assigned with multiple GO categories and hence multiple GO terms. The GO domain distribution is shown in table below:</p>
+
+                        <div class="table-caption">Table 10: GO Distribution of Significantly Differential expression transcripts</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sample Name</th>
+                                    <th>Significant DGE</th>
+                                    <th># Seq with GO</th>
+                                    <th>Biological Process</th>
+                                    <th>Cellular Component</th>
+                                    <th>Molecular Function</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Comparison1</td>
+                                    <td>2,547</td>
+                                    <td>860</td>
+                                    <td>790</td>
+                                    <td>780</td>
+                                    <td>749</td>
+                                </tr>
+                                <tr>
+                                    <td>Comparison2</td>
+                                    <td>1,511</td>
+                                    <td>499</td>
+                                    <td>459</td>
+                                    <td>455</td>
+                                    <td>433</td>
+                                </tr>
+                                <tr>
+                                    <td>Comparison3</td>
+                                    <td>2,272</td>
+                                    <td>772</td>
+                                    <td>715</td>
+                                    <td>713</td>
+                                    <td>681</td>
+                                </tr>
+                                <tr>
+                                    <td>Comparison4</td>
+                                    <td>1,467</td>
+                                    <td>514</td>
+                                    <td>470</td>
+                                    <td>469</td>
+                                    <td>449</td>
+                                </tr>
+                                <tr>
+                                    <td>Comparison5</td>
+                                    <td>2,153</td>
+                                    <td>750</td>
+                                    <td>696</td>
+                                    <td>681</td>
+                                    <td>665</td>
+                                </tr>
+                                <tr>
+                                    <td>Comparison6</td>
+                                    <td>2,403</td>
+                                    <td>797</td>
+                                    <td>729</td>
+                                    <td>725</td>
+                                    <td>688</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="section-1-8-5">
+                        <h4>1.8.5 Pathway analysis for significant DGE</h4>
+                        <p>Ortholog assignment and mapping of Significant differentially expressed transcripts to the biological pathways were performed using KEGG automatic annotation server (KAAS). Significant differentially expressed transcripts were compared against the KEGG database using BLASTX with threshold bit-score value of 60 (default). Pathway analysis was performed using all differentially expressed transcripts. The mapped transcripts represented metabolic pathways of major biomolecules such as carbohydrates, lipids, nucleotides, amino acids, glycans, etc. The mapped transcripts also represented the genes involved in metabolism, genetic information processing, and environmental information processing, cellular processes and organismal systems. Detail of the transcripts following in particular pathway along with the pathway images is given in data deliverables entitled "07_Significant_DGE_pathways". Respective pathway images are also provided in the same folder. Pathway statistics for one of the comparisons and one representative pathway image have been given below for illustration purpose.</p>
+
+                        <div class="table-caption">Table 11: KEGG pathway statistics for Significant differentially expressed transcripts for Comparison-1</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#Level 1</th>
+                                    <th>Level 2</th>
+                                    <th>Counts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>09100 Metabolism</td><td>09101 Carbohydrate metabolism</td><td>37</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09102 Energy metabolism</td><td>15</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09103 Lipid metabolism</td><td>70</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09104 Nucleotide metabolism</td><td>14</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09105 Amino acid metabolism</td><td>31</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09106 Metabolism of other amino acids</td><td>16</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09107 Glycan biosynthesis and metabolism</td><td>53</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09108 Metabolism of cofactors and vitamins</td><td>22</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09109 Metabolism of terpenoids and polyketides</td><td>1</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09110 Biosynthesis of other secondary metabolites</td><td>2</td></tr>
+                                <tr><td>09100 Metabolism</td><td>09111 Xenobiotics biodegradation and metabolism</td><td>20</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09121 Transcription</td><td>13</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09122 Translation</td><td>30</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09123 Folding, sorting and degradation</td><td>78</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09124 Replication and repair</td><td>24</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09125 Information processing in viruses</td><td>24</td></tr>
+                                <tr><td>09120 Genetic Information Processing</td><td>09126 Chromosome</td><td>37</td></tr>
+                                <tr><td>09130 Environmental Information Processing</td><td>09131 Membrane transport</td><td>2</td></tr>
+                                <tr><td>09130 Environmental Information Processing</td><td>09132 Signal transduction</td><td>791</td></tr>
+                                <tr><td>09130 Environmental Information Processing</td><td>09133 Signaling molecules and interaction</td><td>183</td></tr>
+                                <tr><td>09140 Cellular Processes</td><td>09141 Transport and catabolism</td><td>212</td></tr>
+                                <tr><td>09140 Cellular Processes</td><td>09142 Cell motility</td><td>128</td></tr>
+                                <tr><td>09140 Cellular Processes</td><td>09143 Cell growth and death</td><td>135</td></tr>
+                                <tr><td>09140 Cellular Processes</td><td>09144 Cellular community - eukaryotes</td><td>156</td></tr>
+                                <tr><td>09140 Cellular Processes</td><td>09145 Cellular community - prokaryotes</td><td>5</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09149 Aging</td><td>42</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09151 Immune system</td><td>255</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09152 Endocrine system</td><td>420</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09153 Circulatory system</td><td>76</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09154 Digestive system</td><td>97</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09155 Excretory system</td><td>49</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09156 Nervous system</td><td>337</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09157 Sensory system</td><td>67</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09158 Development and regeneration</td><td>40</td></tr>
+                                <tr><td>09150 Organismal Systems</td><td>09159 Environmental adaptation</td><td>86</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09161 Cancer: overview</td><td>316</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09162 Cancer: specific types</td><td>201</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09163 Immune disease</td><td>13</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09164 Neurodegenerative disease</td><td>316</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09165 Substance dependence</td><td>110</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09166 Cardiovascular disease</td><td>162</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09167 Endocrine and metabolic disease</td><td>118</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09171 Infectious disease: bacterial</td><td>254</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09172 Infectious disease: viral</td><td>272</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09174 Infectious disease: parasitic</td><td>59</td></tr>
+                                <tr><td>09160 Human Diseases</td><td>09176 Drug resistance: antineoplastic</td><td>46</td></tr>
+                                <tr><td>09180 Brite Hierarchies</td><td>09181 Protein families: metabolism</td><td>313</td></tr>
+                                <tr><td>09180 Brite Hierarchies</td><td>09182 Protein families: genetic information processing</td><td>1,117</td></tr>
+                                <tr><td>09180 Brite Hierarchies</td><td>09183 Protein families: signaling and cellular processes</td><td>782</td></tr>
+                                <tr><td>09190 Not Included in Pathway or Brite</td><td>09191 Unclassified: metabolism</td><td>19</td></tr>
+                                <tr><td>09190 Not Included in Pathway or Brite</td><td>09192 Unclassified: genetic information processing</td><td>5</td></tr>
+                                <tr><td>09190 Not Included in Pathway or Brite</td><td>09193 Unclassified: signaling and cellular processes</td><td>44</td></tr>
+                                <tr><td>09190 Not Included in Pathway or Brite</td><td>09194 Poorly characterized</td><td>1</td></tr>
+                            </tbody>
+                        </table>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 7: Example Glycolysis Pathway for Comparison-1]
+                            </div>
+                            <figcaption><strong>Figure 7:</strong> Example of Glycolysis pathway for Comparison-1 DGE: Purple color entry has been assigned to at least one gene entry whereas a pink color entry corresponds to an ortholog table entry, which corresponds to a gene that is a part of a functional unit on the pathway.</figcaption>
+                        </figure>
+
+                        <div class="note">
+                            <strong>Note:</strong><br>
+                            (a) Non-specific organism pathway hits are obtained in pathway results due to lenient threshold (bit score: 60) applied in KAAS webserver.<br>
+                            (b) Pathway stats for only one comparison has been shown above, however stats and images for all other combinations has been provided as a part of data deliverables "07_Significant_DGE_pathways".
+                        </div>
+                    </div>
+
+                    <div id="section-1-8-6">
+                        <h4>1.8.6 Over-representation (or enrichment) analysis</h4>
+                        <p>Over-representation (enrichment) analysis is a statistical approach used to identify biological functions, pathways, or processes that are significantly over-represented among a given list of genes compared to a reference background. This helps in interpreting large-scale transcriptomic data by linking differentially expressed genes (DEGs) to specific molecular mechanisms and biological pathways.</p>
+
+                        <p>Functional enrichment analysis was performed using the clusterProfiler R package to identify over-represented Gene Ontology (GO) terms and Kyoto Encyclopedia of Genes and Genomes (KEGG) pathways among the significantly differentially expressed genes (DEGs). The functions enrichGO and enrichKEGG were applied independently to both up-regulated and down-regulated gene sets.</p>
+
+                        <p>Multiple hypothesis testing correction was performed using the Benjamini–Hochberg (BH) method, and GO and KEGG terms with pvalueCutoff = 0.05, and qvalueCutoff=0.2 were considered statistically significant.</p>
+
+                        <p>The results of the enrichment analyses were visualized using dot plots and bar plots, highlighting the most significantly enriched GO terms and KEGG pathways that may represent key biological processes and molecular mechanisms underlying the observed expression changes.</p>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 8: Dot Plot of GO Enrichment - Down-regulated Genes]
+                            </div>
+                            <figcaption><strong>Figure 8:</strong> Dot plot of GO enrichment for Comparison1 of down-regulated genes showing the most significantly enriched Gene Ontology (GO) terms in the differentially expressed genes (DEGs).</figcaption>
+                        </figure>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 9: Dot Plot of KEGG Enrichment - Down-regulated Genes]
+                            </div>
+                            <figcaption><strong>Figure 9:</strong> Dot plot of KEGG pathway enrichment for Comparison1 of down-regulated genes, highlighting the most significantly enriched KEGG pathways in the differentially expressed genes (DEGs).</figcaption>
+                        </figure>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 10: Dot Plot of GO Enrichment - Up-regulated Genes]
+                            </div>
+                            <figcaption><strong>Figure 10:</strong> Dot plot of GO enrichment for Comparison1 of up-regulated genes showing the most significantly enriched Gene Ontology (GO) terms in the differentially expressed genes (DEGs).</figcaption>
+                        </figure>
+
+                        <figure>
+                            <div class="figure-placeholder">
+                                [Figure 11: Dot Plot of KEGG Enrichment - Up-regulated Genes]
+                            </div>
+                            <figcaption><strong>Figure 11:</strong> Dot plot of KEGG pathway enrichment for Comparison1 of down-regulated genes, highlighting the most significantly enriched KEGG pathways in the differentially expressed genes (DEGs).</figcaption>
+                        </figure>
+
+                        <div class="note">
+                            <strong>Note:</strong> Dot plot for only down regulated genes of one comparison has been shown above, however plots for upregulated genes as well as all other combinations have been provided as a part of data deliverables "08_Significant_DGE_Enrichment/".
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="section-2">
+                <h2>2. Deliverables</h2>
+                <p>The following deliverables have been provided as part of this comprehensive RNA-Seq analysis:</p>
+
+                <div class="deliverables-tree">
+                    <strong>01_Raw_Data</strong><br>
+                    &nbsp;&nbsp;A1_S662_L007_R1_001.fastq.gz<br>
+                    &nbsp;&nbsp;A1_S662_L007_R2_001.fastq.gz<br>
+                    &nbsp;&nbsp;B1_S663_L007_R1_001.fastq.gz<br>
+                    &nbsp;&nbsp;B1_S663_L007_R2_001.fastq.gz<br>
+                    &nbsp;&nbsp;C1_S664_L007_R1_001.fastq.gz<br>
+                    &nbsp;&nbsp;C1_S664_L007_R2_001.fastq.gz<br>
+                    &nbsp;&nbsp;D1_S665_L007_R1_001.fastq.gz<br>
+                    &nbsp;&nbsp;D1_S665_L007_R2_001.fastq.gz<br>
+                    &nbsp;&nbsp;NGS_240602_md5sum.txt<br>
+                    &nbsp;&nbsp;NGS_240602_Raw_Stats.txt<br>
+                    <br>
+                    <strong>02_reference_genome_and_gff</strong><br>
+                    &nbsp;&nbsp;GCF_036323735.1_GRCr8_genomic.fna<br>
+                    &nbsp;&nbsp;GCF_036323735.1_GRCr8_genomic.gff<br>
+                    <br>
+                    <strong>03_transcript_assembly_gtf</strong><br>
+                    &nbsp;&nbsp;gffcompare_results.gtf<br>
+                    &nbsp;&nbsp;merged_transcripts.gtf<br>
+                    &nbsp;&nbsp;NGS_240602_A1Aligned_1.gtf<br>
+                    &nbsp;&nbsp;NGS_240602_B1Aligned_1.gtf<br>
+                    &nbsp;&nbsp;NGS_240602_C1Aligned_1.gtf<br>
+                    &nbsp;&nbsp;NGS_240602_D1Aligned_1.gtf<br>
+                    &nbsp;&nbsp;novel.isoforms.gtf<br>
+                    &nbsp;&nbsp;ReadMe.txt<br>
+                    <br>
+                    <strong>04_transcript_sequences_fasta</strong><br>
+                    &nbsp;&nbsp;Merged.fasta<br>
+                    &nbsp;&nbsp;NGS_240602_A1Aligned_transcript.fasta<br>
+                    &nbsp;&nbsp;NGS_240602_B1Aligned_transcript.fasta<br>
+                    &nbsp;&nbsp;NGS_240602_C1Aligned_transcript.fasta<br>
+                    &nbsp;&nbsp;NGS_240602_D1Aligned_transcript.fasta<br>
+                    <br>
+                    <strong>05_differential_expression_analysis</strong><br>
+                    &nbsp;&nbsp;Comparison1_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison1_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison1_MA_and_Volcano.pdf<br>
+                    &nbsp;&nbsp;Comparison2_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison2_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison2_MA_and_Volcano.pdf<br>
+                    &nbsp;&nbsp;Comparison3_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison3_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison3_MA_and_Volcano.pdf<br>
+                    &nbsp;&nbsp;Comparison4_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison4_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison4_MA_and_Volcano.pdf<br>
+                    &nbsp;&nbsp;Comparison5_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison5_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison5_MA_and_Volcano.pdf<br>
+                    &nbsp;&nbsp;Comparison6_DGE.xlsx<br>
+                    &nbsp;&nbsp;Comparison6_Heatmap.png<br>
+                    &nbsp;&nbsp;Comparison6_MA_and_Volcano.pdf<br>
+                    <br>
+                    <strong>06_Significant_DGE_GO</strong><br>
+                    &nbsp;&nbsp;Comparison1_Significant_DGE_with_GO.xlsx<br>
+                    &nbsp;&nbsp;Comparison2_Significant_DGE_with_GO.xlsx<br>
+                    &nbsp;&nbsp;Comparison3_Significant_DGE_with_GO.xlsx<br>
+                    &nbsp;&nbsp;Comparison4_Significant_DGE_with_GO.xlsx<br>
+                    &nbsp;&nbsp;Comparison5_Significant_DGE_with_GO.xlsx<br>
+                    &nbsp;&nbsp;Comparison6_Significant_DGE_with_GO.xlsx<br>
+                    <br>
+                    <strong>07_Significant_DGE_pathways</strong><br>
+                    &nbsp;&nbsp;Comparison1_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison1_Significant_DGE_Pathways.xlsx<br>
+                    &nbsp;&nbsp;Comparison2_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison2_Significant_DGE_Pathways.xlsx<br>
+                    &nbsp;&nbsp;Comparison3_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison3_Significant_DGE_Pathways.xlsx<br>
+                    &nbsp;&nbsp;Comparison4_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison4_Significant_DGE_Pathways.xlsx<br>
+                    &nbsp;&nbsp;Comparison5_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison5_Significant_DGE_Pathways.xlsx<br>
+                    &nbsp;&nbsp;Comparison6_Significant_DGE_Pathway_images/<br>
+                    &nbsp;&nbsp;Comparison6_Significant_DGE_Pathways.xlsx<br>
+                    <br>
+                    <strong>08_Significant_DGE_Enrichment</strong><br>
+                    &nbsp;&nbsp;C1_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C1_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C1_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C1_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C1_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C1_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C1_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C1_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C1_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C1_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C1_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C1_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C2_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C2_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C2_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C2_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C2_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C2_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C2_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C2_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C2_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C2_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C2_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C2_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C3_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C3_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C3_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C3_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C3_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C3_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C3_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C3_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C3_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C3_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C3_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C3_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C4_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C4_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C4_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C4_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C4_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C4_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C4_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C4_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C4_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C4_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C4_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C4_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C5_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C5_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C5_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C5_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C5_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C5_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C5_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C5_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C5_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C5_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C5_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C5_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C6_down_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C6_down_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C6_down_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C6_down_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C6_down_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C6_down_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C6_up_barplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C6_up_barplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C6_up_dotplot_GO_enrichment.png<br>
+                    &nbsp;&nbsp;C6_up_dotplot_KEGG_enrichment.png<br>
+                    &nbsp;&nbsp;C6_up_GO_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;C6_up_KEGG_enrichment_results.xlsx<br>
+                    &nbsp;&nbsp;Readme.txt<br>
+                </div>
+
+                <p style="margin-top: 20px;"><strong>[END OF REPORT]</strong></p>
+            </section>
+        </div>
+
+        <footer>
+            <div class="footer-confidential">Unigenome | Confidential – Restricted use only</div>
+            <div class="footer-meta">
+                Report ID: NGS-240602 | Date: 25-10-25<br>
+                &copy; 2025 Unipath Specialty Laboratory Ltd. All rights reserved.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
